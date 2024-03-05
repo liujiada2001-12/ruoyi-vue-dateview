@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.date.mapper.UserDateMsgMapper">
+    
+    <resultMap type="UserDateMsg" id="UserDateMsgResult">
+        <result property="id"    column="id"    />
+        <result property="number"    column="number"    />
+        <result property="siteCode"    column="site_code"    />
+        <result property="value"    column="value"    />
+        <result property="dateCategory"    column="date_category"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectUserDateMsgVo">
+        select id, number, site_code, value, date_category, create_time, update_time, create_by, update_by, remark from user_date_msg
+    </sql>
+
+    <select id="selectUserDateMsgList" parameterType="UserDateMsg" resultMap="UserDateMsgResult">
+        <include refid="selectUserDateMsgVo"/>
+        <where>  
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="siteCode != null  and siteCode != ''"> and site_code = #{siteCode}</if>
+            <if test="value != null "> and value = #{value}</if>
+            <if test="dateCategory != null "> and date_category = #{dateCategory}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserDateMsgById" parameterType="Long" resultMap="UserDateMsgResult">
+        <include refid="selectUserDateMsgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserDateMsg" parameterType="UserDateMsg" useGeneratedKeys="true" keyProperty="id">
+        insert into user_date_msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="number != null">number,</if>
+            <if test="siteCode != null">site_code,</if>
+            <if test="value != null">value,</if>
+            <if test="dateCategory != null">date_category,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="number != null">#{number},</if>
+            <if test="siteCode != null">#{siteCode},</if>
+            <if test="value != null">#{value},</if>
+            <if test="dateCategory != null">#{dateCategory},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserDateMsg" parameterType="UserDateMsg">
+        update user_date_msg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="number != null">number = #{number},</if>
+            <if test="siteCode != null">site_code = #{siteCode},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="dateCategory != null">date_category = #{dateCategory},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserDateMsgById" parameterType="Long">
+        delete from user_date_msg where id = #{id}
+    </delete>
+
+    <delete id="deleteUserDateMsgByIds" parameterType="String">
+        delete from user_date_msg where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

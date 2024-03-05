@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.device.mapper.UserDeviceStatusMapper">
+    
+    <resultMap type="UserDeviceStatus" id="UserDeviceStatusResult">
+        <result property="id"    column="id"    />
+        <result property="statusName"    column="status_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectUserDeviceStatusVo">
+        select id, status_name, parent_id, create_time, update_time, create_by, update_by from user_device_status
+    </sql>
+
+    <select id="selectUserDeviceStatusList" parameterType="UserDeviceStatus" resultMap="UserDeviceStatusResult">
+        <include refid="selectUserDeviceStatusVo"/>
+        <where>  
+            <if test="statusName != null  and statusName != ''"> and status_name like concat('%', #{statusName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserDeviceStatusById" parameterType="Long" resultMap="UserDeviceStatusResult">
+        <include refid="selectUserDeviceStatusVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserDeviceStatus" parameterType="UserDeviceStatus" useGeneratedKeys="true" keyProperty="id">
+        insert into user_device_status
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statusName != null">status_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statusName != null">#{statusName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserDeviceStatus" parameterType="UserDeviceStatus">
+        update user_device_status
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="statusName != null">status_name = #{statusName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserDeviceStatusById" parameterType="Long">
+        delete from user_device_status where id = #{id}
+    </delete>
+
+    <delete id="deleteUserDeviceStatusByIds" parameterType="String">
+        delete from user_device_status where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

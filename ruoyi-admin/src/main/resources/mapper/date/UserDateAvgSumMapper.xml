@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.date.mapper.UserDateAvgSumMapper">
+    
+    <resultMap type="UserDateAvgSum" id="UserDateAvgSumResult">
+        <result property="cType"    column="c_type"    />
+        <result property="cValue"    column="c_value"    />
+        <result property="vType"    column="v_type"    />
+    </resultMap>
+
+    <sql id="selectUserDateAvgSumVo">
+        select c_type, c_value, v_type from user_date_avg_sum
+    </sql>
+
+    <select id="selectUserDateAvgSumList" parameterType="UserDateAvgSum" resultMap="UserDateAvgSumResult">
+        <include refid="selectUserDateAvgSumVo"/>
+        <where>  
+            <if test="cType != null  and cType != ''"> and c_type = #{cType}</if>
+            <if test="cValue != null "> and c_value = #{cValue}</if>
+            <if test="vType != null  and vType != ''"> and v_type = #{vType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserDateAvgSumByCType" parameterType="String" resultMap="UserDateAvgSumResult">
+        <include refid="selectUserDateAvgSumVo"/>
+        where c_type = #{cType}
+    </select>
+        
+    <insert id="insertUserDateAvgSum" parameterType="UserDateAvgSum">
+        insert into user_date_avg_sum
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cType != null">c_type,</if>
+            <if test="cValue != null">c_value,</if>
+            <if test="vType != null">v_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cType != null">#{cType},</if>
+            <if test="cValue != null">#{cValue},</if>
+            <if test="vType != null">#{vType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserDateAvgSum" parameterType="UserDateAvgSum">
+        update user_date_avg_sum
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cValue != null">c_value = #{cValue},</if>
+            <if test="vType != null">v_type = #{vType},</if>
+        </trim>
+        where c_type = #{cType}
+    </update>
+
+    <delete id="deleteUserDateAvgSumByCType" parameterType="String">
+        delete from user_date_avg_sum where c_type = #{cType}
+    </delete>
+
+    <delete id="deleteUserDateAvgSumByCTypes" parameterType="String">
+        delete from user_date_avg_sum where c_type in 
+        <foreach item="cType" collection="array" open="(" separator="," close=")">
+            #{cType}
+        </foreach>
+    </delete>
+</mapper>

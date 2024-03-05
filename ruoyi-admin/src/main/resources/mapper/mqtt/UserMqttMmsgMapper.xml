@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mqtt.mapper.UserMqttMmsgMapper">
+    
+    <resultMap type="UserMqttMmsg" id="UserMqttMmsgResult">
+        <result property="id"    column="id"    />
+        <result property="topic"    column="topic"    />
+        <result property="msg"    column="msg"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectUserMqttMmsgVo">
+        select id, topic, msg, update_time, update_by, create_time, create_by, remark from user_mqtt_mmsg
+    </sql>
+
+    <select id="selectUserMqttMmsgList" parameterType="UserMqttMmsg" resultMap="UserMqttMmsgResult">
+        <include refid="selectUserMqttMmsgVo"/>
+        <where>  
+            <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
+            <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserMqttMmsgById" parameterType="Long" resultMap="UserMqttMmsgResult">
+        <include refid="selectUserMqttMmsgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserMqttMmsg" parameterType="UserMqttMmsg" useGeneratedKeys="true" keyProperty="id">
+        insert into user_mqtt_mmsg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="topic != null">topic,</if>
+            <if test="msg != null">msg,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="topic != null">#{topic},</if>
+            <if test="msg != null">#{msg},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserMqttMmsg" parameterType="UserMqttMmsg">
+        update user_mqtt_mmsg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="topic != null">topic = #{topic},</if>
+            <if test="msg != null">msg = #{msg},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserMqttMmsgById" parameterType="Long">
+        delete from user_mqtt_mmsg where id = #{id}
+    </delete>
+
+    <delete id="deleteUserMqttMmsgByIds" parameterType="String">
+        delete from user_mqtt_mmsg where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

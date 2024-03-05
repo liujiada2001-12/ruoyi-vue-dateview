@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.date.mapper.UserDateHistoryMapper">
+    
+    <resultMap type="UserDateHistory" id="UserDateHistoryResult">
+        <result property="time"    column="time"    />
+        <result property="value"    column="value"    />
+    </resultMap>
+
+    <sql id="selectUserDateHistoryVo">
+        select time, value from user_date_history
+    </sql>
+
+    <select id="selectUserDateHistoryList" parameterType="UserDateHistory" resultMap="UserDateHistoryResult">
+        <include refid="selectUserDateHistoryVo"/>
+        <where>  
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="value != null "> and value = #{value}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserDateHistoryByTime" parameterType="String" resultMap="UserDateHistoryResult">
+        <include refid="selectUserDateHistoryVo"/>
+        where time = #{time}
+    </select>
+        
+    <insert id="insertUserDateHistory" parameterType="UserDateHistory">
+        insert into user_date_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="time != null">time,</if>
+            <if test="value != null">value,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="time != null">#{time},</if>
+            <if test="value != null">#{value},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserDateHistory" parameterType="UserDateHistory">
+        update user_date_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="value != null">value = #{value},</if>
+        </trim>
+        where time = #{time}
+    </update>
+
+    <delete id="deleteUserDateHistoryByTime" parameterType="String">
+        delete from user_date_history where time = #{time}
+    </delete>
+
+    <delete id="deleteUserDateHistoryByTimes" parameterType="String">
+        delete from user_date_history where time in 
+        <foreach item="time" collection="array" open="(" separator="," close=")">
+            #{time}
+        </foreach>
+    </delete>
+</mapper>

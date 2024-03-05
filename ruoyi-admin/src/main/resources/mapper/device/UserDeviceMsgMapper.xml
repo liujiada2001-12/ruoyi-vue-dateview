@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.device.mapper.UserDeviceMsgMapper">
+    
+    <resultMap type="UserDeviceMsg" id="UserDeviceMsgResult">
+        <result property="id"    column="id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="name"    column="name"    />
+        <result property="statusName"    column="status_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="upTime"    column="up_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="upBy"    column="up_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectUserDeviceMsgVo">
+        select id, category_name, name, status_name, create_time, up_time, create_by, up_by, remark from user_device_msg
+    </sql>
+
+    <select id="selectUserDeviceMsgList" parameterType="UserDeviceMsg" resultMap="UserDeviceMsgResult">
+        <include refid="selectUserDeviceMsgVo"/>
+        <where>  
+            <if test="categoryName != null "> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="statusName != null "> and status_name like concat('%', #{statusName}, '%')</if>
+            <if test="upTime != null "> and up_time = #{upTime}</if>
+            <if test="upBy != null  and upBy != ''"> and up_by = #{upBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserDeviceMsgById" parameterType="Long" resultMap="UserDeviceMsgResult">
+        <include refid="selectUserDeviceMsgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserDeviceMsg" parameterType="UserDeviceMsg" useGeneratedKeys="true" keyProperty="id">
+        insert into user_device_msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null">category_name,</if>
+            <if test="name != null">name,</if>
+            <if test="statusName != null">status_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="upTime != null">up_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="upBy != null">up_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null">#{categoryName},</if>
+            <if test="name != null">#{name},</if>
+            <if test="statusName != null">#{statusName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="upTime != null">#{upTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="upBy != null">#{upBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserDeviceMsg" parameterType="UserDeviceMsg">
+        update user_device_msg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="statusName != null">status_name = #{statusName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="upTime != null">up_time = #{upTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="upBy != null">up_by = #{upBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserDeviceMsgById" parameterType="Long">
+        delete from user_device_msg where id = #{id}
+    </delete>
+
+    <delete id="deleteUserDeviceMsgByIds" parameterType="String">
+        delete from user_device_msg where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
